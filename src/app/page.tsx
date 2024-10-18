@@ -1,18 +1,13 @@
-import { cardService } from "@/services/card-api/card-api-impl";
-import { cache } from "react";
-import { PaginationService } from "@/services/pagination-service/pagination-service";
-import CardsGrid from "@/components/cards-grid";
-import Sidebar from "@/components/sidebar";
+import React from "react";
 import TopBar from "@/components/top-bar";
-import PaginationComponent from "@/components/client-pagination";
-
-async function fetchAndPaginateCards(perPage: number, currentPage: number) {
-  const cachedCardsAPI = cache(cardService.getAllCards);
-  const cards = await cachedCardsAPI({ perPage });
-  const paginationService = new PaginationService<any>(perPage); // Create a pagination service instance
-  paginationService.setItems(cards);
-  return paginationService.getPaginatedItems(currentPage);
-}
+import Sidebar from "@/components/sidebar";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { fetchAndPaginateCards } from "@/app/source";
+import CartsGridWithPagination from "@/components/carts-grid-with-pagination";
 
 export default async function Home({
   searchParams,
@@ -20,15 +15,24 @@ export default async function Home({
   searchParams: { page: number };
 }) {
   const perPage = 12;
-  const currentPage = searchParams.page ?? 1; // Example current page
-  const paginatedCards = await fetchAndPaginateCards(perPage, currentPage);
+
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["cards", searchParams.page],
+    queryFn: async () => {
+      return await fetchAndPaginateCards(perPage, searchParams.page ?? 1);
+    },
+  });
 
   return (
     <div className={"flex flex-col w-full"}>
       <TopBar />
       <div className="flex w-full gap-3">
         <Sidebar />
-        <CardsGrid paginatedCards={paginatedCards} />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <CartsGridWithPagination />
+        </HydrationBoundary>
       </div>
     </div>
   );

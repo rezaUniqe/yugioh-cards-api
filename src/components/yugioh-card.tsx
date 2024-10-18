@@ -29,7 +29,6 @@ const YugiohCard = ({ name, imageUrl, type, description }: CardProps) => {
           flipped ? "rotate-y-180" : ""
         }`}
       >
-        {/* Front Side */}
         <div
           className={`absolute w-full h-full backface-hidden ${
             flipped ? "hidden" : "block"
@@ -42,7 +41,6 @@ const YugiohCard = ({ name, imageUrl, type, description }: CardProps) => {
           />
         </div>
 
-        {/* Back Side (Description) */}
         <div
           className={`absolute w-full h-full bg-gray-800 text-white rounded-lg p-4 transform overflow-auto backface-hidden ${
             flipped ? "block" : "hidden"

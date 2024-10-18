@@ -3,11 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { NextUIProvider } from "@nextui-org/react";
 import { ReactNode } from "react";
+import Providers from "@/app/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Yu-Gi-Oh! Cards",
+  metadataBase: new URL("http://localhost:8080"),
   description:
     "Explore a vast collection of Yu-Gi-Oh! cards, deck lists, and resources. Join the battle with your favorite cards!",
   keywords:
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html className={"dark"} lang="en">
       <body className={inter.className}>
-        <NextUIProvider>{children}</NextUIProvider>
+        <Providers>
+          <NextUIProvider>{children}</NextUIProvider>
+        </Providers>
       </body>
     </html>
   );

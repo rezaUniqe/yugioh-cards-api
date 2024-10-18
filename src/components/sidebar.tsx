@@ -30,6 +30,7 @@ const MySidebar = () => {
           }}
         >
           <MenuItem
+            active={true}
             icon={<FontAwesomeIcon icon={faList} className="text-white" />}
           >
             All Cards
@@ -40,7 +41,7 @@ const MySidebar = () => {
             Deck Lists
           </MenuItem>
           <MenuItem
-            icon={<FontAwesomeIcon icon={faBook} className="text-white" />} // Icon for Documentation
+            icon={<FontAwesomeIcon icon={faBook} className="text-white" />}
           >
             Starter Decks
           </MenuItem>
